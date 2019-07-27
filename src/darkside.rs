@@ -8,21 +8,23 @@ pub fn cmd<'a, 'b>() -> clap::App<'a, 'b> {
         .about("A scary prompt")
         .arg(
             Arg::with_name("max-path-chars")
+                .long("--max-path-chars")
+                .short("n")
                 .help("limit the width of the path printed")
                 .takes_value(true),
         )
 }
 
 pub fn prompt<'a>(matches: &ArgMatches<'a>) -> Option<String> {
-    let limit: Option<usize> = matches
+    let limit: usize = matches
         .value_of("max-path-chars")
-        .and_then(|val| usize::from_str_radix(val, 10).ok());
+        .and_then(|val| usize::from_str_radix(val, 10).ok()).unwrap_or(usize::max_value());
 
     let mut path = String::new();
     if let Ok(cwd) = env::current_dir() {
         if let Some(val) = cwd.as_path().to_str() {
-            if let Some(n) = limit {
-                path.push_str(&val.chars().take(n).clone().collect::<String>());
+                if val.len() > limit {
+                path.push_str(&val.chars().skip(val.len() - limit).clone().collect::<String>());
             } else {
                 path.push_str(val);
             }
@@ -48,6 +50,7 @@ pub fn prompt<'a>(matches: &ArgMatches<'a>) -> Option<String> {
     }
     Some(temp)
 }
+
 
 fn cycle<T, I: DoubleEndedIterator<Item = T> + Clone>(
     iter: I,

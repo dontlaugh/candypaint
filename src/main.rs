@@ -21,18 +21,11 @@ fn main() {
 
     let matches = app.get_matches();
 
-    if let Some(matches) = matches.subcommand_matches("darkside") {
-        darkside::prompt(&matches);
-    }
+    let mut prompt: Option<String> = None;
 
-    let prompt = match matches.value_of("theme") {
-        Some(theme) => match theme {
-            "chad" => chad(),
-            "darkside" => darkside(),
-            _ => chad(),
-        },
-        _ => None,
-    };
+    if let Some(matches) = matches.subcommand_matches("darkside") {
+        prompt = darkside::prompt(&matches);
+    }
 
     println!(
         "export CANDY = \"{}\"",
@@ -71,34 +64,6 @@ fn chad() -> Option<String> {
     Some(ret)
 }
 
-/// darkside is scary.
-fn darkside() -> Option<String> {
-    let mut path = String::new();
-    if let Ok(cwd) = env::current_dir() {
-        if let Some(val) = cwd.as_path().to_str() {
-            path.push_str(val);
-        }
-    }
-
-    // black -> light grey
-    let mut temp = String::new();
-
-    for (c, color) in path.chars().zip(cycle(0xe8..0xfe)) {
-        write!(&mut temp, "${{c::0x{:X},bold}}{}", color, c).ok()?;
-    }
-
-    if let Some(git_info) = git_info() {
-        write!(
-            &mut temp,
-            " ${{c::0x7c}}<<{}${{c::0x7c}}>> ${{c::reset}}",
-            &git_info.branch.trim()
-        )
-        .ok()?;
-    } else {
-        temp.push_str(" ${c::0x7c}>> ${c::reset}");
-    }
-    Some(temp)
-}
 
 pub fn git_info() -> Option<GitInfo> {
     use std::process::Command;
