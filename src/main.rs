@@ -4,8 +4,8 @@ use clap::{App, Arg};
 use std::env;
 use std::fmt::Write;
 
-mod darkside;
 mod chad;
+mod darkside;
 
 fn main() {
     let app = App::new("candypaint")
@@ -45,7 +45,6 @@ pub fn git_info() -> Option<GitInfo> {
 pub struct GitInfo {
     pub branch: String,
 }
-
 
 fn cycle<T, I: DoubleEndedIterator<Item = T> + Clone>(
     iter: I,

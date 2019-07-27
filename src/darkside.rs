@@ -18,13 +18,19 @@ pub fn cmd<'a, 'b>() -> clap::App<'a, 'b> {
 pub fn prompt<'a>(matches: &ArgMatches<'a>) -> Option<String> {
     let limit: usize = matches
         .value_of("max-path-chars")
-        .and_then(|val| usize::from_str_radix(val, 10).ok()).unwrap_or(usize::max_value());
+        .and_then(|val| usize::from_str_radix(val, 10).ok())
+        .unwrap_or(usize::max_value());
 
     let mut path = String::new();
     if let Ok(cwd) = env::current_dir() {
         if let Some(val) = cwd.as_path().to_str() {
-                if val.len() > limit {
-                path.push_str(&val.chars().skip(val.len() - limit).clone().collect::<String>());
+            if val.len() > limit {
+                path.push_str(
+                    &val.chars()
+                        .skip(val.len() - limit)
+                        .clone()
+                        .collect::<String>(),
+                );
             } else {
                 path.push_str(val);
             }
@@ -50,4 +56,3 @@ pub fn prompt<'a>(matches: &ArgMatches<'a>) -> Option<String> {
     }
     Some(temp)
 }
-
