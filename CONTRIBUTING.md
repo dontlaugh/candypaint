@@ -6,6 +6,8 @@ Add a new file **src/myprompt.rs** that matches the name of your prompt with the
 following contents
 
 ```rust
+use super::*;
+use clap::{Arg, ArgMatches};
 
 pub fn cmd<'a, 'b>() -> clap::App<'a, 'b> {
     clap::App::new("myprompt")
