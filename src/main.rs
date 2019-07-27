@@ -32,7 +32,7 @@ fn chad() -> Option<String> {
 
     let mut ret = String::new();
 
-    let range: Vec<i32> = (0xd6..0xde).rev().collect();
+    let range: Vec<i32> = (0xd0..0xde).rev().collect();
 
     if let Ok(user) = env::var("USER") {
         for (i, c) in user.chars().enumerate() {
