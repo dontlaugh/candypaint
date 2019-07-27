@@ -4,17 +4,26 @@ use clap::{App, Arg};
 use std::env;
 use std::fmt::Write;
 
-fn cycle<T, I: DoubleEndedIterator<Item = T> + Clone>(iter: I) -> std::iter::Cycle<std::iter::Chain<I, std::iter::Rev<I>>> {
+fn cycle<T, I: DoubleEndedIterator<Item = T> + Clone>(
+    iter: I,
+) -> std::iter::Cycle<std::iter::Chain<I, std::iter::Rev<I>>> {
     iter.clone().chain(iter.rev()).cycle()
 }
 
+mod darkside;
+
 fn main() {
-    let matches = App::new("candypaint")
-        .version("0.2.0")
+    let app = App::new("candypaint")
+        .version("0.3.0")
         .about("candy coated prompts for the ion shell")
         .author("Coleman Emery McFarland")
-        .arg(Arg::with_name("theme").help("theme name").required(false))
-        .get_matches();
+        .subcommand(darkside::cmd());
+
+    let matches = app.get_matches();
+
+    if let Some(matches) = matches.subcommand_matches("darkside") {
+        darkside::prompt(&matches);
+    }
 
     let prompt = match matches.value_of("theme") {
         Some(theme) => match theme {
@@ -91,15 +100,10 @@ fn darkside() -> Option<String> {
     Some(temp)
 }
 
-fn git_info() -> Option<GitInfo> {
+pub fn git_info() -> Option<GitInfo> {
     use std::process::Command;
     let mut cmd = Command::new("git");
-    cmd.args(&[
-        "rev-parse",
-        "--symbolic-full-name",
-        "--abbrev-ref",
-        "HEAD",
-    ]);
+    cmd.args(&["rev-parse", "--symbolic-full-name", "--abbrev-ref", "HEAD"]);
     let output = cmd.output().ok()?;
     if !output.status.success() {
         return None;
@@ -110,6 +114,6 @@ fn git_info() -> Option<GitInfo> {
 
 /// GitInfo holds state related to the current git repo, if present.
 #[derive(Debug)]
-struct GitInfo {
-    branch: String,
+pub struct GitInfo {
+    pub branch: String,
 }
