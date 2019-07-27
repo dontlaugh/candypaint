@@ -51,9 +51,3 @@ pub fn prompt<'a>(matches: &ArgMatches<'a>) -> Option<String> {
     Some(temp)
 }
 
-
-fn cycle<T, I: DoubleEndedIterator<Item = T> + Clone>(
-    iter: I,
-) -> std::iter::Cycle<std::iter::Chain<I, std::iter::Rev<I>>> {
-    iter.clone().chain(iter.rev()).cycle()
-}
