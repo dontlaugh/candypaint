@@ -47,5 +47,7 @@ We have 2 so far.
 
 
 A theme is simply a function that returns `Option<String>` built from your 
-environment (your path, your git status, etc.)
+environment (your path, your git status, etc.). 
+
+Got an idea? See **CONTRIBUTING.md** to see how to add a prompt.
 
