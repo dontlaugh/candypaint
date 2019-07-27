@@ -31,7 +31,6 @@ Then add your prompt as a subcommand to the main application in **main.rs**
         // ...
         .subcommand(myprompt::cmd());
 
-
     // and invoke it here ...
     let prompt = match matches.subcommand() {
         ("myprompt", Some(matches)) => myprompt::prompt(&matches),
