@@ -7,7 +7,7 @@ Candy coated prompts for the ion shell. Tested on Linux only, for now.
 Use cargo. Note that ~/.cargo/bin must be on your PATH
 
 ```
-cargo install --git https://github.com/anxiousmodernman/candypaint
+cargo install --git https://gitlab.redox-os.org/coleman/candypaint.git
 ```
 
 Then, add the following to **~/.config/ion/initrc**
